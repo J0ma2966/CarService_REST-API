@@ -1,0 +1,15 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Wash Company SwaggerUi Api",
+    "version": "1.0.0",
+    "title": "WashCompany RestAPI"
+  },
+  "paths": {},
+  "tags": [
+    {
+      "name": "User Auth",
+      "description": "User authentication"
+    }
+  ]
+}

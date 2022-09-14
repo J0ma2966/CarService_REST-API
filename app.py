@@ -3,8 +3,9 @@ from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
 from sqlalchemy.orm import sessionmaker
 
-from api.handlers.user_api import user_api
+from api.user_api import user_api
 from config.conf import load_config
+from config.app_config import DevelopmentCfg
 from db import get_engine
 from middlewares.database import DbMiddleware
 
@@ -40,7 +41,8 @@ def main():
     app.register_blueprint(user_api)
 
     # start app
-    app.run(debug=True)
+    app.config.from_object(DevelopmentCfg)
+    app.run()
 
 
 if __name__ == "__main__":

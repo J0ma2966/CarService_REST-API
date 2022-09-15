@@ -4,7 +4,7 @@ from datetime import datetime, timezone, timedelta
 
 import jwt
 import sqlalchemy as sa
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 
 from db.models import BaseModel
 from db.role import UserRole, check_is_valid_role
@@ -20,6 +20,8 @@ class Users(BaseModel):
     password = sa.Column(sa.String)
     role = sa.Column(sa.Enum(UserRole))
 
+    wash_company_id = sa.Column(sa.BigInteger, sa.ForeignKey('wash_companies.id'))
+
     reg_date = sa.Column(sa.DateTime(timezone=True), default=sa.func.now())
 
     def __repr__(self):
@@ -31,6 +33,7 @@ class Users(BaseModel):
             "name": self.name,
             "login": self.login,
             "password": self.password,
+            "wash_company_id": self.wash_company_id,
             "role": self.role.value
         }
 
@@ -70,7 +73,7 @@ def get_user(session: Session, login: str, password: str) -> typing.Union[Users,
 def add_user(session: Session, name: str, login: str, password: str, role: str):
     pwd = hash_user_password(password)
 
-    if all([name, login, password,  role]) and isinstance(get_user(session, login, password), dict):
+    if all([name, login, password, role]) and isinstance(get_user(session, login, password), dict):
         if check_is_valid_role(role):
             user = Users(name=name, login=login, password=pwd, role=role)
             session.add(user)

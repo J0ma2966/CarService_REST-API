@@ -9,6 +9,10 @@
     {
       "name": "User Auth",
       "description": "User authentication"
+    },
+    {
+      "name": "Wash Company",
+      "description": "Add and get company"
     }
   ],
   "servers": [
@@ -48,7 +52,28 @@
             "type": "string",
             "required": true,
             "default": "admin",
-            "enum": ["admin", "owner"]
+            "enum": [
+              "admin",
+              "owner"
+            ]
+          }
+        }
+      },
+      "addWashCompany": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "avatar": {
+            "type": "null",
+            "description": "Company avatar in bytes format",
+            "required": false
+          },
+          "location": {
+            "type": "string",
+            "required": true
           }
         }
       }
@@ -125,6 +150,36 @@
           "description": "Sign out without data",
           "required": false,
           "content": {}
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/washCompanyInsert": {
+      "post": {
+        "tags": [
+          "Wash Company"
+        ],
+        "summary": "Add new Wash Company",
+        "requestBody": {
+          "description": "Admin or owner can add new companies",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addWashCompany"
+              }
+            }
+          }
         },
         "responses": {
           "200": {

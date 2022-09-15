@@ -33,8 +33,8 @@ def user_sign_up():
     registration_data = validators.sign_validation(body.get("login"), body.get("password"))
 
     if (password := registration_data.get("password")) and (login := registration_data.get("login")):
-        name = request.args.get("name")
-        role = request.args.get("role")
+        name = body.get("name")
+        role = body.get("role")
 
         user = user_repo.add_user(g.session, name, login, password, role)
 

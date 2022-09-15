@@ -4,6 +4,8 @@ from sqlalchemy import create_engine
 from config.conf import DB
 
 
+
+
 def make_connection_string(db: DB, async_fallback: bool = False) -> str:
     result = (
         f"postgresql://{db.user}:{db.password}@{db.host}:{db.port}/{db.db_name}"

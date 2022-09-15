@@ -44,6 +44,15 @@ def get_company_by_name(session, name: str) -> typing.Optional[WashCompany]:
     return company
 
 
+def get_company_by_id(session, company_id: int) -> typing.Union[WashCompany, dict]:
+    company = session.get(WashCompany, company_id)
+
+    if company:
+        return company
+
+    return {"error": "Invalid argument 'company_id'"}
+
+
 def add_wash_company(session, name: str, avatar: bytes, location: str) -> typing.Union[WashCompany, dict]:
     if get_company_by_name(session, name):
         return {"error": "Company already exists"}

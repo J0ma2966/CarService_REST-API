@@ -13,6 +13,10 @@
     {
       "name": "Wash Company",
       "description": "Add and get company"
+    },
+    {
+      "name": "Orders",
+      "description": "Manipulate with orders"
     }
   ],
   "servers": [
@@ -67,13 +71,61 @@
             "required": true
           },
           "avatar": {
-            "type": "null",
+            "type": "string",
             "description": "Company avatar in bytes format",
             "required": false
           },
           "location": {
             "type": "string",
             "required": true
+          }
+        }
+      },
+      "integerId": {
+        "type": "integer",
+        "properties": {
+          "companyId": {
+            "type": "integer"
+          }
+        }
+      },
+      "addOrder": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "integer",
+            "required": true
+          },
+          "car_model": {
+            "type": "string",
+            "required": true
+          },
+          "car_number": {
+            "type": "string",
+            "required": true
+          },
+          "client_name": {
+            "type": "string",
+            "required": true
+          },
+          "client_number": {
+            "type": "integer",
+            "required": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "required": false,
+            "default": true
+          },
+          "services": {
+            "type": "array",
+            "required": false,
+            "default": []
+          },
+          "washers": {
+            "type": "array",
+            "required": false,
+            "default": []
           }
         }
       }
@@ -207,6 +259,169 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/signIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/orders": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get company orders",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "WashCompanyId for get orders",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          },
+          {
+            "name": "IsActive",
+            "in": "query",
+            "required": true,
+            "description": "Orders status",
+            "schema": {
+              "type": "boolean",
+              "properties": {
+                "IsActive": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          },
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "required": true,
+            "description": "Orders from date (year-month-day)",
+            "schema": {
+              "type": "string",
+              "properties": {
+                "dateFrom": {
+                  "type": "string",
+                  "default": "year-month-day",
+                  "required": true
+                }
+              }
+            }
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "required": true,
+            "description": "Orders to date (year-month-day)",
+            "schema": {
+              "type": "string",
+              "properties": {
+                "dateTo": {
+                  "type": "string",
+                  "default": "year-month-day",
+                  "required": true
+                }
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Pagination page number (start from 1)",
+            "schema": {
+              "type": "integer",
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "default": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/order/{orderId}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get order info",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "Order id for getting info",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/insertOrder": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Add new order for company",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "CompanyId for adding new order",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add new order for this company",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addOrder"
               }
             }
           }

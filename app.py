@@ -3,6 +3,7 @@ from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
 from sqlalchemy.orm import sessionmaker
 
+from api.orders_api import orders_api
 from api.user_api import user_api
 from api.wash_company import company_api
 from config.conf import load_config
@@ -41,6 +42,7 @@ def main():
     app.register_blueprint(swagger_blueprint, url_prefix="/api/swagger")
     app.register_blueprint(user_api)
     app.register_blueprint(company_api)
+    app.register_blueprint(orders_api)
 
     # start app
     app.config.from_object(DevelopmentCfg)

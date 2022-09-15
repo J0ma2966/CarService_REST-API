@@ -11,7 +11,6 @@ class Journal(BaseModel):
     changes = sa.Column(sa.JSON)
 
     wash_company_id = sa.Column(sa.BigInteger, sa.ForeignKey('wash_companies.id'))
-    wash_company = relationship('WashCompany')
 
     def __repr__(self):
         return f"Journal\n{self.id=}"

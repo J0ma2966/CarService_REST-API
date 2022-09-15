@@ -17,7 +17,10 @@ def add_wash_company(*args, **kwargs):
     avatar = data.get('avatar', None)
     location = data.get('location')
 
-    res = company_repo.add_wash_company(g.session, name, avatar, location)
+    if name and location:
+        res = company_repo.add_wash_company(g.session, name, avatar, location)
+    else:
+        return {"error": "Validation error"}, 400
 
     if isinstance(res, dict):
         return res, 404

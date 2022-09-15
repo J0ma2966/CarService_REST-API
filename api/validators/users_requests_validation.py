@@ -1,7 +1,5 @@
 import re
-import typing
 
-regex_email = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 # Commonly used regular expression for a password - should be at least 8 characters long, includes a special character
 regex_password = re.compile(r"([A-Za-z0-9$%#@]{8,})")
 

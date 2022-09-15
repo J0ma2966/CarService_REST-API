@@ -40,6 +40,10 @@ def jwt_token_required(f):
         try:
             data = jwt.decode(token, DevelopmentCfg.SECRET_KEY, "HS256")
             current_user = get_user_by_id(g.session, data.get('user'))
+
+            if current_user.get("error"):
+                return jsonify(current_user)
+
         except jwt.ExpiredSignatureError:
             return jsonify({'error': 'Token is invalid'}), 400
 

@@ -1,7 +1,8 @@
 from flask import request, g, Blueprint
 
+from api.validators.users_requests_validation import sign_validation
 from api.utils.authenticate_user import jwt_token_required
-from db.models.user import Users
+from db.models.user import Users, get_user
 from db.models import wash_company as company_repo
 
 company_api = Blueprint(name='wash_company_api', import_name=__name__, url_prefix='/api')
@@ -26,5 +27,17 @@ def add_wash_company(*args, **kwargs):
 
 @company_api.route("/getWashCompanyId", methods=["POST"])
 @jwt_token_required
-def get_users_wash_company(user: Users):
-    return {"wash_company_id": user.wash_company_id}, 200
+def get_users_wash_company(user: dict):
+    if body := request.json:
+        data = sign_validation(body.get('login'), body.get('password'))
+
+        if (password := data.get("password")) and (login := data.get("login")):
+            user: Users = get_user(g.session, login, password)
+
+            if isinstance(user, Users):
+                return {"wash_company_id": user.wash_company_id}, 200
+
+            return user, 400
+        return {"error": "Authentication error"}, 400
+    else:
+        return {"wash_company_id": user.get("wash_company_id")}, 200

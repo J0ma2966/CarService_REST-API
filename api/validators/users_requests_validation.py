@@ -12,10 +12,13 @@ def _validate_login(login: str) -> dict:
 
 
 def _validate_password(password) -> dict:
-    if not password or (len(password) < 8) or (re.search(r"[$%#@]", password) is None) or (
+    if not isinstance(password, str) or not password or (len(password) < 8) or (re.search(r"[$%#@]", password)
+                                                                                is None) or (
             (regex_password.fullmatch(password)) is None):
         if not password:
             return {"error": "Password validation error, can't find password"}
+        if not isinstance(password, str):
+            return {"error": "Password length validation error"}
         if len(password) < 8:
             return {"error": "Password length validation error"}
         if re.search(r"[$%#@]", password) is None:

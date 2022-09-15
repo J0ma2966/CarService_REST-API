@@ -193,6 +193,36 @@
           }
         }
       }
+    },
+    "/getWashCompanyId": {
+      "post": {
+        "tags": [
+          "Wash Company"
+        ],
+        "summary": "Get Wash Company id",
+        "requestBody": {
+          "description": "Get users WashCompany id",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/signIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
     }
   }
 }

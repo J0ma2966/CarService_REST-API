@@ -51,7 +51,7 @@ def hash_user_password(pwd: str) -> str:
     return pwd_hashed.hexdigest()
 
 
-def get_user_by_id(session: Session, user_pk: int) -> typing.Union[Users, dict]:
+def get_user_by_id(session: Session, user_pk: int) -> dict:
     user: Users = session.get(Users, user_pk)
 
     if user:

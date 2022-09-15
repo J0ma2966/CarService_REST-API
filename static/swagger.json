@@ -5,11 +5,139 @@
     "version": "1.0.0",
     "title": "WashCompany RestAPI"
   },
-  "paths": {},
   "tags": [
     {
       "name": "User Auth",
       "description": "User authentication"
     }
-  ]
+  ],
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "signIn": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "signUp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "login": {
+            "type": "string",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "role": {
+            "type": "string",
+            "required": true,
+            "default": "admin",
+            "enum": ["admin", "owner"]
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/signIn": {
+      "post": {
+        "tags": [
+          "User Auth"
+        ],
+        "summary": "Sign in for user",
+        "requestBody": {
+          "description": "Sign in by login and password",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/signIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/signUp": {
+      "post": {
+        "tags": [
+          "User Auth"
+        ],
+        "summary": "Sign up for user",
+        "requestBody": {
+          "description": "Sign up by user data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/signUp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/signOut": {
+      "post": {
+        "tags": [
+          "User Auth"
+        ],
+        "summary": "Sign out for user",
+        "requestBody": {
+          "description": "Sign out without data",
+          "required": false,
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    }
+  }
 }

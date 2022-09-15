@@ -96,23 +96,23 @@
             "type": "integer",
             "required": true
           },
-          "car_model": {
+          "carModel": {
             "type": "string",
             "required": true
           },
-          "car_number": {
+          "carNumber": {
             "type": "string",
             "required": true
           },
-          "client_name": {
+          "clientName": {
             "type": "string",
             "required": true
           },
-          "client_number": {
+          "clientNumber": {
             "type": "integer",
             "required": true
           },
-          "is_active": {
+          "isActive": {
             "type": "boolean",
             "required": false,
             "default": true
@@ -126,6 +126,39 @@
             "type": "array",
             "required": false,
             "default": []
+          }
+        }
+      },
+      "editOrder": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "integer",
+            "required": false
+          },
+          "carModel": {
+            "type": "string",
+            "required": false
+          },
+          "carNumber": {
+            "type": "string",
+            "required": false
+          },
+          "isActive": {
+            "type": "boolean",
+            "required": false
+          },
+          "isCancelled": {
+            "type": "boolean",
+            "required": false
+          },
+          "services": {
+            "type": "array",
+            "required": false
+          },
+          "washers": {
+            "type": "array",
+            "required": false
           }
         }
       }
@@ -422,6 +455,47 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/addOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{orderId}/updateOrder": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Update exists order",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "OrderId for editing order",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Edit order",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/editOrder"
               }
             }
           }

@@ -6,8 +6,8 @@ from sqlalchemy.orm import relationship
 
 from db.models import BaseModel
 from db.models.service import Service
-from db.models.washer import Washer
 from db.models.wash_company import get_company_by_id
+from db.models.washer import Washer
 
 
 class Order(BaseModel):
@@ -61,6 +61,12 @@ class OrderWashers(BaseModel):
     id = sa.Column(sa.BigInteger, primary_key=True, autoincrement=True)
     order_id = sa.Column(sa.BigInteger, sa.ForeignKey('orders.id'))
     washer_id = sa.Column(sa.BigInteger, sa.ForeignKey('washers.id'))
+
+
+def _order_obj(session, id_: int) -> Order:
+    order = session.get(Order, id_)
+
+    return order
 
 
 def get_order_by_id(session, order_id: int) -> dict:
@@ -129,3 +135,34 @@ def add_new_order(session, price: int, car_model: str, car_number: str, client_n
     session.commit()
 
     return order.to_json()
+
+
+def update_order(session, order_id: int, price: int, car_model: str, car_number: str, is_cancelled: bool,
+                 is_active: bool, services: list, washers: list):
+    order = _order_obj(session, order_id)
+
+    if price:
+        order.price = price
+    if car_model:
+        order.car_model = car_model
+    if car_number:
+        order.car_number = car_number
+    if isinstance(is_cancelled, bool):
+        order.is_canceled = is_cancelled
+    if isinstance(is_active, bool):
+        order.is_active = is_active
+    if services:
+        for service in services:
+            s = session.get(Service, service)
+
+            if s not in order.services:
+                order.services.append(s)
+    if washers:
+        for washer in washers:
+            w = session.get(Washer, washer)
+
+            if w not in order.washers:
+                order.washers.append(w)
+
+    session.commit()
+    return order

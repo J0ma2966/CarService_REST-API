@@ -52,28 +52,50 @@ def get_users_wash_company(user: dict, order_id: int):
 @orders_api.route("/<int:company_id>/insertOrder", methods=["POST"])
 @jwt_token_required
 def insert_new_order(user: dict, company_id: int):
-    data: dict = request.json
+    req_data: dict = request.json
 
     data = validate_args(
-        (data.get("price"), int.__name__, "price"),
-        (data.get("car_model"), str.__name__, "car_model"),
-        (data.get("car_number"), str.__name__, "car_number"),
-        (data.get("client_name"), str.__name__, "client_name"),
-        (data.get("client_number"), int.__name__, "client_number")
+        (req_data.get("price"), int.__name__, "price"),
+        (req_data.get("carModel"), str.__name__, "car_model"),
+        (req_data.get("carNumber"), str.__name__, "car_number"),
+        (req_data.get("clientName"), str.__name__, "client_name"),
+        (req_data.get("clientNumber"), int.__name__, "client_number"),
+        (req_data.get("isActive"), int.__name__, "client_number") if req_data.get("isActive") else ()
     )
 
     if data.get("error"):
         return data, 400
 
     order = order_repo.add_new_order(g.session, data.get('price'), data.get('car_model'), data.get('car_number'),
-                                     data.get('client_name'), data.get('client_number'), data.get('services') or [],
-                                     data.get('washers') or [], company_id,
-                                     data.get('is_active') or True)
+                                     data.get('client_name'), data.get('client_number'), req_data.get('services') or [],
+                                     req_data.get('washers') or [], company_id,
+                                     data.get('isActive') or True)
 
     return order
 
 
-@orders_api.route("/<int:company_id>/updateOrder", methods=["POST"])
+@orders_api.route("/<int:order_id>/updateOrder", methods=["POST"])
 @jwt_token_required
-def update_order(user: dict, *args):
-    ...
+def update_order(user: dict, order_id: int, *args):
+    order = order_repo.get_order_by_id(g.session, order_id)
+
+    if order.get("error"):
+        return order, 404
+
+    req_data = request.json
+
+    # not required args validate
+    data = validate_args((req_data.get('price'), int.__name__, "price"))
+    data.update(validate_args((req_data.get('carModel'), str.__name__, "car_model")))
+    data.update(validate_args((req_data.get('carNumber'), str.__name__, "car_number")))
+    data.update(validate_args((req_data.get('isCancelled'), bool.__name__, "is_cancelled")))
+    data.update(validate_args((req_data.get('isActive'), bool.__name__, "is_active")))
+
+    if data.get('error'):
+        data.pop('error')
+
+    order = order_repo.update_order(g.session, order_id, data.get('price'), data.get('car_model'),
+                                    data.get('car_number'), data.get('is_cancelled'), data.get('is_active'),
+                                    req_data.get('services'), req_data.get('washers'))
+
+    return order.to_json()

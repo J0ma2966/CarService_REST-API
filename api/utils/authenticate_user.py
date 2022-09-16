@@ -4,7 +4,7 @@ import jwt
 from flask import jsonify, g, session
 
 from config.app_config import DevelopmentCfg
-from db.models.user import get_user_by_id
+from db.repos.user_repo import get_user_by_id
 
 
 def authentication(user, user_session):

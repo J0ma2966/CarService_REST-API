@@ -29,4 +29,3 @@ class Washer(BaseModel):
             "is_active": self.is_active,
             "wash_company_id": self.wash_company_id,
         }
-

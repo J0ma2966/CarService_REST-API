@@ -1,9 +1,10 @@
 from flask import request, g, Blueprint
 
-from api.validators.users_requests_validation import sign_validation
 from api.utils.authenticate_user import jwt_token_required
-from db.models.user import Users, get_user
-from db.models import wash_company as company_repo
+from api.validators.users_requests_validation import sign_validation
+from db.models.user import Users
+from db.repos import washing_company_repo
+from db.repos.user_repo import get_user
 
 company_api = Blueprint(name='wash_company_api', import_name=__name__, url_prefix='/api')
 
@@ -18,7 +19,7 @@ def add_wash_company(*args, **kwargs):
     location = data.get('location')
 
     if name and location:
-        res = company_repo.add_wash_company(g.session, name, avatar, location)
+        res = washing_company_repo.add_wash_company(g.session, name, avatar, location)
     else:
         return {"error": "Validation error"}, 400
 

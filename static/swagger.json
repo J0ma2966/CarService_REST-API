@@ -17,6 +17,10 @@
     {
       "name": "Orders",
       "description": "Manipulate with orders"
+    },
+    {
+      "name": "Washers",
+      "description": "Manipulate with washers"
     }
   ],
   "servers": [
@@ -159,6 +163,58 @@
           "washers": {
             "type": "array",
             "required": false
+          }
+        }
+      },
+      "addWasher": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "required": true
+          },
+          "stake": {
+            "type": "integer",
+            "required": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": true,
+            "required": true
+          }
+        }
+      },
+      "editWasher": {"type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": false
+          },
+          "phoneNumber": {
+            "type": "integer",
+            "required": false
+          },
+          "stake": {
+            "type": "integer",
+            "required": false
+          },
+          "isActive": {
+            "type": "boolean",
+            "required": false,
+            "default": true
+          },
+          "washCompanyId": {
+            "type": "integer",
+            "required": false
+          },
+          "orders": {
+            "type": "array",
+            "required": false,
+            "default": []
           }
         }
       }
@@ -499,6 +555,271 @@
               }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/washers": {
+      "get": {
+        "tags": [
+          "Washers"
+        ],
+        "summary": "Get washers by name",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "WashCompanyId for get washers list",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          },
+          {
+            "name": "searchName",
+            "in": "query",
+            "required": true,
+            "description": "Washer's name",
+            "schema": {
+              "type": "string",
+              "properties": {
+                "dateFrom": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Pagination page number (start from 1)",
+            "schema": {
+              "type": "integer",
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "default": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/washer": {
+      "get": {
+        "tags": [
+          "Washers"
+        ],
+        "summary": "Get washer info by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "WasherId for get info",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{washerId}/getOrders": {
+      "get": {
+        "tags": [
+          "Washers"
+        ],
+        "summary": "Get washer orders",
+        "parameters": [
+          {
+            "name": "washerId",
+            "in": "path",
+            "description": "WasherId for get orders",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "required": true,
+            "description": "Orders status",
+            "schema": {
+              "type": "boolean",
+              "properties": {
+                "IsActive": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          },
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "required": true,
+            "description": "Orders from date (year-month-day)",
+            "schema": {
+              "type": "string",
+              "properties": {
+                "dateFrom": {
+                  "type": "string",
+                  "default": "year-month-day",
+                  "required": true
+                }
+              }
+            }
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "required": true,
+            "description": "Orders to date (year-month-day)",
+            "schema": {
+              "type": "string",
+              "properties": {
+                "dateTo": {
+                  "type": "string",
+                  "default": "year-month-day",
+                  "required": true
+                }
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Pagination page number (start from 1)",
+            "schema": {
+              "type": "integer",
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "default": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/insertWasher": {
+      "post": {
+        "tags": [
+          "Washers"
+        ],
+        "summary": "Add new washer to company",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "CompanyId for adding new washer",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add new washer for this company",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addWasher"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{washerId}/updateWasher": {
+      "post": {
+        "tags": [
+          "Washers"
+        ],
+        "summary": "Edit data about washer",
+        "parameters": [
+          {
+            "name": "washerId",
+            "in": "path",
+            "description": "WasherId for get orders",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Edit washer",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/editWasher"
+              }
+            }
+          }
+
         },
         "responses": {
           "200": {

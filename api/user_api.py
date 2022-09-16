@@ -1,10 +1,10 @@
 from flask import Blueprint
-from flask import request, g, session
 from flask import jsonify
+from flask import request, g, session
 
 from api.utils.authenticate_user import authentication, jwt_token_required, logout
 from api.validators import users_requests_validation as validators
-from db.models import user as user_repo
+from db.repos import user_repo
 
 user_api = Blueprint(name='user_api', import_name=__name__, url_prefix='/api')
 

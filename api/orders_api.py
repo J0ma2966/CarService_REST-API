@@ -4,7 +4,7 @@ from flask import request, g, Blueprint
 
 from api.utils.authenticate_user import jwt_token_required
 from api.validators.validate_arguments import validate_args
-from db.models import order as order_repo
+from db.repos import order_repo
 
 orders_api = Blueprint(name='orders_api', import_name=__name__, url_prefix='/api')
 

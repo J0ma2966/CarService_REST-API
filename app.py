@@ -5,9 +5,10 @@ from sqlalchemy.orm import sessionmaker
 
 from api.orders_api import orders_api
 from api.user_api import user_api
-from api.wash_company import company_api
-from config.conf import load_config
+from api.wash_company_api import company_api
+from api.washer_api import washer_api
 from config.app_config import DevelopmentCfg
+from config.conf import load_config
 from db import get_engine
 from middlewares.database import DbMiddleware
 
@@ -43,6 +44,7 @@ def main():
     app.register_blueprint(user_api)
     app.register_blueprint(company_api)
     app.register_blueprint(orders_api)
+    app.register_blueprint(washer_api)
 
     # start app
     app.config.from_object(DevelopmentCfg)

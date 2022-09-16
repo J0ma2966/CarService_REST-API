@@ -10,6 +10,8 @@ def validate_args(*args):
                 arguments[key] = True
             elif v in ['false', 'False']:
                 arguments[key] = False
+            elif isinstance(v, bool):
+                arguments[key] = v
             else:
                 return {"error": "Arguments error"}
 

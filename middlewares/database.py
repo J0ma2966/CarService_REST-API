@@ -1,5 +1,5 @@
 from flask import Flask, g
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 
 
 class DbMiddleware:

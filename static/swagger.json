@@ -21,6 +21,14 @@
     {
       "name": "Washers",
       "description": "Manipulate with washers"
+    },
+    {
+      "name": "Services",
+      "description": "WashCompany all services"
+    },
+    {
+      "name": "Analytics",
+      "description": "Get information about WashCompany"
     }
   ],
   "servers": [
@@ -188,7 +196,8 @@
           }
         }
       },
-      "editWasher": {"type": "object",
+      "editWasher": {
+        "type": "object",
         "properties": {
           "name": {
             "type": "string",
@@ -215,6 +224,44 @@
             "type": "array",
             "required": false,
             "default": []
+          }
+        }
+      },
+      "addService": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "duration": {
+            "type": "integer",
+            "required": true
+          },
+          "price": {
+            "type": "integer",
+            "required": true
+          }
+        }
+      },
+      "editService": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": false
+          },
+          "duration": {
+            "type": "integer",
+            "required": false
+          },
+          "price": {
+            "type": "integer",
+            "required": false
+          },
+          "washCompanyId": {
+            "type": "integer",
+            "required": false
           }
         }
       }
@@ -819,8 +866,224 @@
               }
             }
           }
-
         },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/services": {
+      "get": {
+        "tags": [
+          "Services"
+        ],
+        "summary": "Get company services",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "WashCompanyId for get services",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Pagination page number (start from 1)",
+            "schema": {
+              "type": "integer",
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "default": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/service": {
+      "get": {
+        "tags": [
+          "Services"
+        ],
+        "summary": "Get service info",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Service id for get information",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/insertService": {
+      "post": {
+        "tags": [
+          "Services"
+        ],
+        "summary": "Add new service to company",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "CompanyId for adding new service",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add new washer for this company",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addService"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{serviceId}/updateService": {
+      "post": {
+        "tags": [
+          "Services"
+        ],
+        "summary": "Edit service",
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "path",
+            "description": "ServiceId for editing service",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Edit service",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addService"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/analytics": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Get analytics about WashCompany",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "WashCompanyId for stats",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Analytics from date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "properties": {
+                "fromDate": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "Analytics to date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "properties": {
+                "toDate": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Authenticated"

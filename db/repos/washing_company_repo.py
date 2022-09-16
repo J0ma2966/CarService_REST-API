@@ -1,8 +1,11 @@
+import datetime
 import typing
 
 from sqlalchemy import select
 
+from api.utils.analytics_db import filter_washers, washers_profit
 from db.models.wash_company import WashCompany
+from db.models.order import Order
 
 
 def get_company_by_name(session, name: str) -> typing.Optional[WashCompany]:
@@ -31,3 +34,21 @@ def add_wash_company(session, name: str, avatar: bytes, location: str) -> typing
     session.commit()
 
     return company
+
+
+def analytics(session, company_id: int, from_date: datetime.datetime, to_date: datetime.datetime):
+    smtp = select(Order).where(
+        Order.date.between(from_date, to_date), Order.wash_company_id == company_id
+    ).order_by(Order.id)
+
+    orders = session.scalars(smtp).all()
+    washers = filter_washers([order.washers for order in orders])
+
+    return {
+        "totalOrders": len(orders),
+        "totalWashers": len(washers),
+        "ordersSum": sum(order.price for order in orders),
+        "washersSum": washers_profit(orders)
+    }
+
+

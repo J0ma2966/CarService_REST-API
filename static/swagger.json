@@ -29,6 +29,18 @@
     {
       "name": "Analytics",
       "description": "Get information about WashCompany"
+    },
+    {
+      "name": "Journal",
+      "description": "Manipulate with journals"
+    },
+    {
+      "name": "Credentials",
+      "description": "Credentials for owner"
+    },
+    {
+      "name": "Support",
+      "description": "Operations with users"
     }
   ],
   "servers": [
@@ -262,6 +274,76 @@
           "washCompanyId": {
             "type": "integer",
             "required": false
+          }
+        }
+      },
+      "addJournal": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "required": true
+          },
+          "userName": {
+            "type": "string",
+            "required": true
+          },
+          "previousCarModel": {
+            "type": "string",
+            "required": false,
+            "default": ""
+          },
+          "currentCarModel": {
+            "type": "string",
+            "required": true
+          },
+          "previousCarNumber": {
+            "type": "string",
+            "required": false,
+            "default": ""
+          },
+          "currentCarNumber": {
+            "type": "string",
+            "required": false
+          },
+          "previousServicesName": {
+            "type": "array",
+            "required": false,
+            "default": []
+          },
+          "currentServicesName": {
+            "type": "array",
+            "required": true,
+            "default": []
+          },
+          "previousServicesPrice": {
+            "type": "array",
+            "required": false,
+            "default": []
+          },
+          "currentServicesPrice": {
+            "type": "array",
+            "required": true,
+            "default": []
+          },
+          "previousPrice": {
+            "type": "string",
+            "required": false,
+            "default": ""
+          },
+          "currentPrice": {
+            "type": "string",
+            "required": true
+          },
+          "isCancelled": {
+            "type": "boolean",
+            "required": false,
+            "default": false
+          },
+          "cancelledReason": {
+            "type": "string",
+            "required": false,
+            "default": ""
           }
         }
       }
@@ -1084,6 +1166,170 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/getJournals": {
+      "get": {
+        "tags": [
+          "Journal"
+        ],
+        "summary": "Get WashCompany journals",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "WashCompanyId for journals",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Pagination page number (start from 1)",
+            "schema": {
+              "type": "integer",
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "default": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{WashCompanyId}/insertJournal": {
+      "post": {
+        "tags": [
+          "Journal"
+        ],
+        "summary": "Insert new journal for WashCompany",
+        "parameters": [
+          {
+            "name": "WashCompanyId",
+            "in": "path",
+            "description": "WashCompanyId for insert journal",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/integerId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add new journal for WashCompany",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addJournal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/changePassword": {
+      "post": {
+        "tags": ["Credentials"],
+        "requestBody": {
+          "description": "Change password",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/sendMessage": {
+      "post": {
+        "tags": ["Support"],
+        "requestBody": {
+          "description": "Send message to user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "contact": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "toEmail": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Authenticated"

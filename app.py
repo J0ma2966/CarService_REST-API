@@ -4,8 +4,11 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from sqlalchemy.orm import sessionmaker
 
 from api.analytics_api import stats
+from api.change_pwd_api import credentials
 from api.orders_api import orders_api
+from api.journals_api import journals_api
 from api.services_api import service_api
+from api.support_api import support
 from api.user_api import user_api
 from api.wash_company_api import company_api
 from api.washer_api import washer_api
@@ -49,10 +52,13 @@ def main():
     app.register_blueprint(washer_api)
     app.register_blueprint(service_api)
     app.register_blueprint(stats)
+    app.register_blueprint(journals_api)
+    app.register_blueprint(credentials)
+    app.register_blueprint(support)
 
     # start app
     app.config.from_object(DevelopmentCfg)
-    app.run('127.0.0.1')
+    app.run()
 
 
 if __name__ == "__main__":

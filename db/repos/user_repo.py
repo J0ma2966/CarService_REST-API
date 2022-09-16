@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from config.app_config import DevelopmentCfg
 from db.models.user import Users
 from db.role import check_is_valid_role
+from api.validators.users_requests_validation import _validate_password
 
 
 def hash_user_password(pwd: str) -> str:
@@ -50,3 +51,20 @@ def add_user(session: Session, name: str, login: str, password: str, role: str):
             return {"error": "Invalid role, only 'admin' or 'owner'"}
     else:
         return {"error": "Sign up error, check data"}
+
+
+def change_password(session, user_id: int, previous_pwd: str, new_pwd: str):
+    user = session.get(Users, user_id)
+
+    if user.password == hash_user_password(previous_pwd):
+        result = _validate_password(new_pwd)
+
+        if result.get("error"):
+            return result
+
+        user.password = hash_user_password(new_pwd)
+
+        session.commit()
+        return {}
+    else:
+        return {"error": "Invalid previous password"}

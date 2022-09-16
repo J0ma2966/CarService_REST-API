@@ -4,6 +4,7 @@ class Config:
     SECRET_KEY: str = ""
     TOKEN_EXPIRE: int = 1  # in days
     SALT: str = "pwqgj12asdfl"  # Please don't change after app started, u can change it in configs below
+    EMAIL_PASSWORD = ""  # set here your email password for sending emails in sendMessage endpoint
 
 
 class ProductionCfg(Config):

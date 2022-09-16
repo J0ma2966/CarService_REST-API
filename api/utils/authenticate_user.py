@@ -52,5 +52,31 @@ def jwt_token_required(f):
     return decorator
 
 
+def owner_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        if 'x-access-token' in session:
+            token = session.get('x-access-token')
+        else:
+            return jsonify({'error': 'A valid token is missing, please log-in'}), 400
+
+        try:
+            data = jwt.decode(token, DevelopmentCfg.SECRET_KEY, "HS256")
+            current_user = get_user_by_id(g.session, data.get('user'))
+
+            if current_user.get("error"):
+                return jsonify(current_user)
+
+            if current_user.get("role") != "owner":
+                return {"error": "Permission denied"}, 400
+
+        except jwt.ExpiredSignatureError:
+            return jsonify({'error': 'Token is invalid'}), 400
+
+        return f(current_user, *args, **kwargs)
+
+    return decorator
+
+
 def logout(user_session):
     user_session.pop('x-access-token')
